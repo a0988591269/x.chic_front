@@ -85,6 +85,16 @@ const { category } = route.params
 console.log('目前類別：', category)
 
 // 假資料，實際請串接API
+interface Product {
+    id: number;
+    name: string;
+    image: string;
+    price: number;
+    discountPrice: number;
+    sales: number;
+    category: string;
+}
+const {data: resp} = await useFetch('http://localhost:5042/api/Product/ProductByCategoryId/' + category)
 const allProducts = ref([
     {
         id: 1,

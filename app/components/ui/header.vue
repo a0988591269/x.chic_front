@@ -35,34 +35,9 @@
     </div>
     <div>
         <ul id="nav">
-            <li class="main_menu">
-                <NuxtLink to="/about">
-                    <span>品牌故事</span>Brand Story
-                </NuxtLink>
-            </li>
-            <li class="main_menu">
-                <NuxtLink to="/products/Top">
-                    <span>上衣</span>Top
-                </NuxtLink>
-            </li>
-            <li class="main_menu">
-                <NuxtLink to="/products/Bottom">
-                    <span>下著</span>Bottom
-                </NuxtLink>
-            </li>
-            <li class="main_menu">
-                <NuxtLink to="/products/Accessories">
-                    <span>配件</span>Accessories
-                </NuxtLink>
-            </li>
-            <li class="main_menu">
-                <NuxtLink to="/products/Peripheral">
-                    <span>周邊</span>Peripheral
-                </NuxtLink>
-            </li>
-            <li class="main_menu">
-                <NuxtLink to="/contact">
-                    <span>聯絡我們</span>Contact Us
+            <li v-for="item in resp" :key="item.categoryId" class="main_menu">
+                <NuxtLink :to="`/categories/${item.slug}`">
+                    <span>{{ item.categoryName }}</span>{{ item.categoryEngName }}
                 </NuxtLink>
             </li>
         </ul>
@@ -70,9 +45,20 @@
 </template>
 
 <script setup lang="ts">
+
+interface Category {
+    categoryId: number;
+    categoryName: string;
+    categoryEngName: string;
+    description: string;
+    slug: string;
+}
+
 const isOpen = ref(false);
 const toggleCollapse = () => {
     isOpen.value = !isOpen.value;
     return isOpen.value;
 };
+const { data: resp } = await useFetch<Category[]>('http://localhost:5042/api/Category')
+
 </script>
