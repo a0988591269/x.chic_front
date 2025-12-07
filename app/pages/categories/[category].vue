@@ -33,23 +33,23 @@
 
         <!-- 商品列表 -->
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            <div v-for="product in pagedProducts" :key="product.id"
+            <div v-for="item in pagedProducts" :key="item.productId"
                 class="bg-white rounded-xl shadow hover:shadow-lg transition flex flex-col">
-                <NuxtLink :to="`/products/${category}/${product.id}`">
-                    <img :src="product.image" :alt="product.name" class="rounded-t-xl object-cover h-48 w-full" />
+                <NuxtLink :to="`/products/${category}/${item.productId}`">
+                    <img :src="`${item.imageUrl}`" :alt="`${item.productName}`" class="rounded-t-xl object-cover h-48 w-full" />
                     <div class="p-4 flex-1 flex flex-col">
-                        <h3 class="font-semibold text-lg text-gray-800 mb-1 truncate">{{ product.name }}</h3>
+                        <h3 class="font-semibold text-lg text-gray-800 mb-1 truncate">{{ item.productName }}</h3>
                         <div class="flex items-center gap-2 mb-2">
-                            <span v-if="product.discountPrice < product.price" class="text-pink-500 font-bold text-xl">
-                                ${{ product.discountPrice }}
+                            <span v-if="item.discountPrice < item.price" class="text-pink-500 font-bold text-xl">
+                                ${{ item.discountPrice }}
                             </span>
-                            <span v-if="product.discountPrice < product.price"
+                            <span v-if="item.discountPrice < item.price"
                                 class="text-gray-400 line-through text-sm">
-                                ${{ product.price }}
+                                ${{ item.price }}
                             </span>
-                            <span v-else class="text-gray-800 font-bold text-xl">${{ product.price }}</span>
+                            <span v-else class="text-gray-800 font-bold text-xl">${{ item.price }}</span>
                         </div>
-                        <div class="text-gray-500 text-sm mb-2">銷售量：{{ product.sales }}</div>
+                        <div class="text-gray-500 text-sm mb-2">銷售量：{{ item.stockQty }}</div>
                     </div>
                 </NuxtLink>
             </div>
@@ -86,45 +86,59 @@ console.log('目前類別：', category)
 
 // 假資料，實際請串接API
 interface Product {
-    id: number;
-    name: string;
-    image: string;
+    productId: number;
+    productName: string;
+    shortDescription: string;
+    longDescription: string;
+    categoryId: number;
+    isActive: boolean;
+    totalSales: number;
+    rating: number;
+    isHot: boolean;
+    isNew: boolean;
+    isRecommended: boolean;
+    productVariantId: number;
+    sku: string;
     price: number;
     discountPrice: number;
-    sales: number;
-    category: string;
+    stockQty: number;
+    imageUrl: string;
 }
-const {data: resp} = await useFetch('http://localhost:5042/api/Product/ProductByCategoryId/' + category)
-const allProducts = ref([
-    {
-        id: 1,
-        name: '經典白T',
-        image: 'https://source.unsplash.com/400x300/?tshirt,white',
-        price: 690,
-        discountPrice: 590,
-        sales: 120,
-        category: '上衣'
-    },
-    {
-        id: 2,
-        name: '牛仔褲',
-        image: 'https://source.unsplash.com/400x300/?jeans',
-        price: 1290,
-        discountPrice: 990,
-        sales: 80,
-        category: '褲子'
-    },
-    {
-        id: 3,
-        name: '棒球帽',
-        image: 'https://source.unsplash.com/400x300/?cap',
-        price: 390,
-        discountPrice: 390,
-        sales: 60,
-        category: '配件'
-    },
-    // ...可再補充更多假資料
-])
+const {data: resp} = await useFetch<Product[]>('http://localhost:5042/api/Product/GetBySlug', {
+    params: {
+        slug: category as string
+    }
+})
+// const allProducts = ref([
+//     {
+//         id: 1,
+//         name: '經典白T',
+//         image: 'https://source.unsplash.com/400x300/?tshirt,white',
+//         price: 690,
+//         discountPrice: 590,
+//         sales: 120,
+//         category: '上衣'
+//     },
+//     {
+//         id: 2,
+//         name: '牛仔褲',
+//         image: 'https://source.unsplash.com/400x300/?jeans',
+//         price: 1290,
+//         discountPrice: 990,
+//         sales: 80,
+//         category: '褲子'
+//     },
+//     {
+//         id: 3,
+//         name: '棒球帽',
+//         image: 'https://source.unsplash.com/400x300/?cap',
+//         price: 390,
+//         discountPrice: 390,
+//         sales: 60,
+//         category: '配件'
+//     },
+//     // ...可再補充更多假資料
+// ])
 
 // const categories = ref(['上衣', '褲子', '配件'])
 
@@ -146,12 +160,13 @@ const resetFilters = () => {
 
 // 篩選後的商品
 const filteredProducts = computed(() => {
-    return allProducts.value.filter(p => {
-        const matchKeyword = !filters.value.keyword || p.name.includes(filters.value.keyword)
-        const matchCategory = !filters.value.category || p.category === filters.value.category
+    return (resp.value ?? []).filter(p => {
+        const matchKeyword = !filters.value.keyword || p.productName.includes(filters.value.keyword)
+        // const matchCategory = !filters.value.category || p.category === filters.value.category
         const matchMin = filters.value.priceMin == null || p.discountPrice >= filters.value.priceMin
         const matchMax = filters.value.priceMax == null || p.discountPrice <= filters.value.priceMax
-        return matchKeyword && matchCategory && matchMin && matchMax
+        // return matchKeyword && matchCategory && matchMin && matchMax
+        return matchKeyword && matchMin && matchMax
     })
 })
 
