@@ -49,7 +49,7 @@
                             </span>
                             <span v-else class="text-gray-800 font-bold text-xl">${{ item.price }}</span>
                         </div>
-                        <div class="text-gray-500 text-sm mb-2">銷售量：{{ item.stockQty }}</div>
+                        <div class="text-gray-500 text-sm mb-2">銷售量：{{ item.totalSales }}</div>
                     </div>
                 </NuxtLink>
             </div>
