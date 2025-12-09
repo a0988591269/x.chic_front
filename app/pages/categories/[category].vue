@@ -36,7 +36,7 @@
             <div v-for="item in pagedProducts" :key="item.productId"
                 class="bg-white rounded-xl shadow hover:shadow-lg transition flex flex-col">
                 <NuxtLink :to="`/products/${category}/${item.productId}`">
-                    <img :src="`${item.imageUrl}`" :alt="`${item.productName}`" class="rounded-t-xl object-cover h-48 w-full" />
+                    <img :src="`http://localhost:5042${item.imageUrl}`" :alt="`${item.productName}`" class="rounded-t-xl object-cover h-48 w-full" />
                     <div class="p-4 flex-1 flex flex-col">
                         <h3 class="font-semibold text-lg text-gray-800 mb-1 truncate">{{ item.productName }}</h3>
                         <div class="flex items-center gap-2 mb-2">
@@ -177,6 +177,7 @@ const totalPages = computed(() => Math.ceil(filteredProducts.value.length / page
 const pagedProducts = computed(() =>
     filteredProducts.value.slice((page.value - 1) * pageSize, page.value * pageSize)
 )
+console.log('分頁商品數量：', pagedProducts.value)
 
 const goPage = (p: number) => {
     page.value = p
