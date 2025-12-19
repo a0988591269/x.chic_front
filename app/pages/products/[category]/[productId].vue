@@ -21,7 +21,7 @@
       <div class="md:w-1/2 flex flex-col gap-5">
         <div>
           <h1 class="text-3xl font-bold text-gray-900 tracking-tight">{{ product.name }}</h1>
-          <p class="text-gray-500 mt-2 text-base">{{ product.summary }}</p>
+          <p v-html="safeSummary" class="text-gray-500 mt-2 text-base"></p>
         </div>
 
         <div class="flex items-baseline gap-3">
@@ -193,9 +193,13 @@
     </div>
 
   </div>
+  <div v-else class="max-w-6xl mx-auto px-4 py-10 font-sans">
+    <p class="text-center text-gray-500">商品不存在</p>
+  </div>
 </template>
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
+import DOMPurify from 'dompurify';
 
 // --- 1. 定義介面 (對應 SQL 結構轉換後的 JSON) ---
 interface OptionValue {
@@ -394,4 +398,23 @@ const hotProducts = ref([
   { id: 101, name: "休閒短褲", discountPrice: 390, image: "https://placehold.co/100x100?text=Shorts" },
   { id: 102, name: "漁夫帽", discountPrice: 290, image: "https://placehold.co/100x100?text=Hat" }
 ]);
+
+// 改為 client-side 動態 import 並儲存已 sanitiz 的字串
+const safeSummary = ref('');
+
+const sanitizeSummary = async (desc?: string) => {
+  if (typeof window === 'undefined') return;
+  const createDOMPurify = (await import('dompurify')).default;
+  const purify = createDOMPurify(window);
+  safeSummary.value = purify.sanitize(desc ?? '');
+};
+
+onMounted(async () => {
+  await sanitizeSummary(product.value?.summary);
+});
+
+// 當 product.summary 更新時也重新 sanitize（例如 fetch 完成後）
+watch(() => product.value?.summary, (v) => {
+  sanitizeSummary(v);
+});
 </script>
