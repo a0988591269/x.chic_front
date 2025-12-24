@@ -80,6 +80,11 @@
 <script setup lang="ts">
 import { NuxtLink } from '#components'
 
+definePageMeta({
+  public: true,
+  middleware: 'guest'
+})
+
 const route = useRoute()
 const { category } = route.params
 console.log('目前類別：', category)

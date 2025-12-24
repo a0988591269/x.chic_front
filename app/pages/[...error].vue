@@ -14,7 +14,13 @@
 </template>
 
 <script setup>
+  
 import { NuxtLink } from '#components';
+
+definePageMeta({
+  public: true,
+  middleware: 'guest'
+})
 
 // definePageMeta({ layout: false })
 
@@ -22,5 +28,7 @@ import { NuxtLink } from '#components';
 // if (import.meta.server) {
 //   error.value = createError({ statusCode: 404, statusMessage: 'Not Found' })
 // }
+
 useError(404, 'Not Found')
+
 </script>

@@ -45,6 +45,7 @@
           </span>
         </div>
 
+        <!-- 規格選擇 -->
         <div class="space-y-4">
           <div v-for="option in product.options" :key="option.id">
             <h3 class="text-sm font-bold text-gray-800 mb-2">{{ option.name }}</h3>
@@ -201,6 +202,11 @@
 import { ref, computed, onMounted, watch } from 'vue';
 import DOMPurify from 'dompurify';
 
+definePageMeta({
+  public: true,
+  middleware: 'guest'
+})
+
 // --- 1. 定義介面 (對應 SQL 結構轉換後的 JSON) ---
 interface OptionValue {
   id: number; // 對應 ProductOptionValueId
@@ -339,6 +345,7 @@ const isOptionDisabled = (optionName: string, valueId: number) => {
   // 1. 建立一個「假設選了這個選項」的狀態
   // 我們保留當前已選的其他選項，但覆蓋(或新增)目前正在檢查的這個選項
   const mockSelection = { ...selectedOptions.value, [optionName]: valueId };
+  console.log('假設選項狀態：', mockSelection);
   const mockIds = Object.values(mockSelection);
 
   // 2. 檢查是否有任何 Variant 符合這個假設狀態

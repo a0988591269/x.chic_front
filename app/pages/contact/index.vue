@@ -42,6 +42,11 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
+definePageMeta({
+  public: true,
+  middleware: 'guest'
+})
+
 const form = ref({
     name: '',
     email: '',
