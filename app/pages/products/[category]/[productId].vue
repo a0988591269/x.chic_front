@@ -203,8 +203,7 @@ import { ref, computed, onMounted, watch } from 'vue';
 import DOMPurify from 'dompurify';
 
 definePageMeta({
-  public: true,
-  middleware: 'guest'
+  public: true
 })
 
 // --- 1. 定義介面 (對應 SQL 結構轉換後的 JSON) ---

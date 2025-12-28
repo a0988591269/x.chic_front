@@ -27,6 +27,14 @@
                 <a class="w-auto h-[30px] text-zinc-600" type="button" value="">註冊</a>
             </NuxtLink>
         </div>
+        <div v-else class="flex justify-self-end items-center mx-3">
+            <NuxtLink to="/">
+                <input class="w-[60px] h-[30px] text-zinc-600" type="button" value="購物車">
+            </NuxtLink>
+            <NuxtLink to="/">
+                <a class="w-auto h-[30px] text-zinc-600" type="button" value="" v-on:click="auth.logout()">登出</a>
+            </NuxtLink>
+        </div>
     </div>
     <div>
         <NuxtLink to="/">

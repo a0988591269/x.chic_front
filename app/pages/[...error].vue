@@ -18,8 +18,7 @@
 import { NuxtLink } from '#components';
 
 definePageMeta({
-  public: true,
-  middleware: 'guest'
+  public: true
 })
 
 // definePageMeta({ layout: false })

@@ -15,8 +15,7 @@
 
 <script setup lang="ts">
 definePageMeta({
-  public: true,
-  middleware: 'guest'
+  public: true
 })
 const items = [
   'https://picsum.photos/640/640?random=1',

@@ -55,7 +55,6 @@
 
 <script setup lang="ts">
 definePageMeta({
-  public: true,
-  middleware: 'guest'
+  public: true
 })
 </script>

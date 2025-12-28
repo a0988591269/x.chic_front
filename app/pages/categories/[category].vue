@@ -81,8 +81,7 @@
 import { NuxtLink } from '#components'
 
 definePageMeta({
-  public: true,
-  middleware: 'guest'
+  public: true
 })
 
 const route = useRoute()

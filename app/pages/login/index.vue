@@ -35,8 +35,10 @@ import { ref } from 'vue'
 import { useAuthStore } from '~~/stores/auth'
 
 definePageMeta({
-  public: true,
-  middleware: 'guest'
+  // 使用 guest middleware 處理「已登入踢回首頁」的邏輯
+  middleware: 'guest',
+  // 標記為公開，配合 auth.global.ts 使用
+  public: true
 })
 
 const isLogin = ref(false)
@@ -57,9 +59,13 @@ async function handleSubmit() {
   const resp = await $fetch<LoginResponse>('http://localhost:5042/api/auth/login', { method: 'POST', body: fd })
   const auth = useAuthStore()
   auth.setToken(resp.accessToken)
+  console.log('登入成功，Token 已儲存')
+  // 登入成功後導向首頁或 query.redirect 指定頁面
+  console.log(auth.isAuthenticated)
   if(auth.isAuthenticated){
-    const redirect = useRoute().query.redirect
-    navigateTo(Array.isArray(redirect) ? redirect[0] : redirect ?? '/')
+    // const redirect = useRoute().query.redirect
+    // navigateTo(Array.isArray(redirect) ? redirect[0] : redirect ?? '/')
+    navigateTo("/");
   }
 }
 </script>

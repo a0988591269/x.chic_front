@@ -43,8 +43,7 @@
 import { ref } from 'vue'
 
 definePageMeta({
-  public: true,
-  middleware: 'guest'
+  public: true
 })
 
 const form = ref({
