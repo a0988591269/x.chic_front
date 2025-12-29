@@ -46,27 +46,26 @@ const form = ref({
   email: '',
   password: ''
 })
-interface LoginResponse {
-  accessToken: string,
-  expiresAt: Date
-}
 // Submit 時轉成 FormData
 async function handleSubmit() {
-  const fd = new FormData()
-  fd.append('Email', form.value.email)
-  fd.append('Password', form.value.password)
+  // const fd = new ()
+  // fd.append('Email', form.value.email)
+  // fd.append('Password', form.value.password)
   // axios / $fetch
-  const resp = await $fetch<LoginResponse>('http://localhost:5042/api/auth/login', { method: 'POST', body: fd })
-  const auth = useAuthStore()
-  auth.setToken(resp.accessToken)
-  console.log('登入成功，Token 已儲存')
-  // 登入成功後導向首頁或 query.redirect 指定頁面
-  console.log(auth.isAuthenticated)
-  if(auth.isAuthenticated){
-    // const redirect = useRoute().query.redirect
-    // navigateTo(Array.isArray(redirect) ? redirect[0] : redirect ?? '/')
-    navigateTo("/");
-  }
+  const resp = await $fetch('https://localhost:7197/api/auth/login', {
+    method: 'POST', body: {
+      'Email': form.value.email,
+      'Password': form.value.password
+    }
+  })
+  console.log(resp, '登入成功')
+  // const auth = useAuthStore()
+  // auth.getUserInfo()
+  // if (auth.isAuthenticated) {
+  //   // const redirect = useRoute().query.redirect
+  //   // navigateTo(Array.isArray(redirect) ? redirect[0] : redirect ?? '/')
+  //   navigateTo("/");
+  // }
 }
 </script>
 

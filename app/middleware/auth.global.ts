@@ -1,7 +1,12 @@
 import { useAuthStore } from "~~/stores/auth";
 
-export default defineNuxtRouteMiddleware((to) => {
+export default defineNuxtRouteMiddleware(async (to) => {
   const auth = useAuthStore();
+
+  // 確保 user 資料載入
+  if (!auth.isLoaded) {
+    await auth.getUserInfo()
+  }
 
   // 1. 防止無限循環：如果目標已經是登入頁，直接放行
   // 這樣 guest.middleware (在 login 頁面設定的) 才會接手處理已登入邏輯
