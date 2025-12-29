@@ -28,7 +28,7 @@ export const useAuthStore = defineStore("auth", {
   actions: {
     async getUserInfo() {
       try {
-        const res = await api.get<UserInfo>("/auth/userInfo");
+        const res = await api.get("/auth/userInfo");
         this.user = res.data;
       } catch {
         this.user = null;
