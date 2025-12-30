@@ -1,6 +1,4 @@
 import { defineStore } from "pinia";
-// import { useApi } from "@/composables/useApi";
-import api from "@/utils/api";
 
 interface UserInfo {
   userId: string;
@@ -15,10 +13,10 @@ interface UserInfo {
 export const useAuthStore = defineStore("auth", {
   state: () => ({
     user: null as UserInfo | null, // 我們只存 User Info，不存 Token
-    isAuthenticated: false,
-    isInitialized: false,
   }),
   getters: {
+    isAuthenticated: (state) => !!state.user,
+
     hasRole: (state) => (role: string) =>
       state.user?.roles.includes(role) ?? false,
 
@@ -30,27 +28,25 @@ export const useAuthStore = defineStore("auth", {
     async checkAuth() {
       try {
         // 這請求會自動帶 Cookie
-        const userInfo = await api.get<UserInfo>("/auth/userInfo");
-        this.user = userInfo;
-        this.isAuthenticated = true;
-      } catch (error) {
+        const api = useApi();
+        this.user = await api.get<UserInfo>("/auth/userInfo");
+      } catch {
         this.user = null;
-        this.isAuthenticated = false;
-      } finally {
-        this.isInitialized = true;
       }
     },
+
+    // 登入
     async login(loginData) {
-      // Post 範例
+      const api = useApi();
       await api.post("/auth/login", loginData);
     },
+
     // 登出
     async logout() {
       const api = useApi();
       await api.post("/auth/logout"); // 呼叫後端清除 Cookie
       this.user = null;
-      this.isAuthenticated = false;
-      window.location.href = "/login";
+      this.isInitialized = true;
     },
   },
 });

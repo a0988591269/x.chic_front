@@ -1,15 +1,18 @@
 <template>
   <div>
     <NuxtLayout>
-      <NuxtPage />
+      <NuxtPage v-if="auth.isAuthenticated" />
+      <div v-else class="loading-container"></div>
     </NuxtLayout>
   </div>
 </template>
 <script lang="ts" setup>
-import { useAuthStore } from '~~/stores/auth';
+import { useAuthStore } from "~~/stores/auth";
 const auth = useAuthStore();
-// 這裡建議用 onBeforeMount 確保在組件掛載前完成數據對齊
+// 使用 onBeforeMount 確保在 SSR/Client 掛載前就發起身分檢查
 onBeforeMount(async () => {
-  await auth.checkAuth();
+  if (!auth.isAuthenticated) {
+    await auth.checkAuth();
+  }
 });
 </script>
