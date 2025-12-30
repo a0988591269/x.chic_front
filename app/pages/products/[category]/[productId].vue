@@ -304,7 +304,7 @@ const route = useRoute();
 const { category, productId } = route.params;
 console.log('目前類別：', category, '產品ID：', productId);
 // 實際型別是 Ref<ProductDetail | null>
-const { data: product } = await useFetch<ProductDetail>(`http://localhost:5042/api/Product/GetProductDetail/${productId}`);
+const { data: product } = await useFetch<ProductDetail>(`https://localhost:7197/api/Product/GetProductDetail/${productId}`);
 
 // --- 3. 狀態管理 ---
 const activeImageIndex = ref(0);

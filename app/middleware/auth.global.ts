@@ -3,9 +3,8 @@ import { useAuthStore } from "~~/stores/auth";
 export default defineNuxtRouteMiddleware(async (to) => {
   const auth = useAuthStore();
 
-  // 確保 user 資料載入
-  if (!auth.isLoaded) {
-    await auth.getUserInfo()
+  if (!auth.isInitialized) {
+    await auth.checkAuth();
   }
 
   // 1. 防止無限循環：如果目標已經是登入頁，直接放行

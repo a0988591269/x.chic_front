@@ -108,7 +108,7 @@ interface Product {
     stockQty: number;
     imageUrl: string;
 }
-const {data: resp} = await useFetch<Product[]>('http://localhost:5042/api/Product/GetBySlug', {
+const {data: resp} = await useFetch<Product[]>('https://localhost:7197/api/Product/GetBySlug', {
     params: {
         slug: category as string
     }

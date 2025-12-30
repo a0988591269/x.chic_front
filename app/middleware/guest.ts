@@ -1,13 +1,16 @@
 import { useAuthStore } from "~~/stores/auth";
 
-export default defineNuxtRouteMiddleware((to, from) => {
+export default defineNuxtRouteMiddleware(async (to, from) => {
   const auth = useAuthStore();
+
+  if (!auth.isAuthenticated) {
+    await auth.checkAuth(); // ⏳ 等到有結果
+  }
 
   // 已登入者不准再進 login
   if (auth.isAuthenticated) {
     // 嘗試從 query 參數中獲取原本想去的頁面 (配合 auth.global.ts 的 redirect 參數)
     const redirectPath = to.query.redirect as string;
-
     if (redirectPath) {
       return navigateTo(redirectPath);
     }

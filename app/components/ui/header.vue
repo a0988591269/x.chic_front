@@ -15,7 +15,7 @@
                 </div>
             </div>
         </div>
-        <div v-if="!auth.isAuthenticated" class="flex justify-self-end items-center mx-3">
+        <div v-if="!isLogin" class="flex justify-self-end items-center mx-3">
             <NuxtLink to="/">
                 <input class="w-[60px] h-[30px] text-zinc-600" type="button" value="購物車">
             </NuxtLink>
@@ -55,6 +55,7 @@
 <script setup lang="ts">
 import { useAuthStore } from '~~/stores/auth';
 const auth = useAuthStore();
+const isLogin = computed(() => auth.isAuthenticated)
 
 interface Category {
     categoryId: number;
@@ -69,6 +70,6 @@ const toggleCollapse = () => {
     isOpen.value = !isOpen.value;
     return isOpen.value;
 };
-const { data: resp } = await useFetch<Category[]>('http://localhost:5042/api/Category')
+const { data: resp } = await useFetch<Category[]>('https://localhost:7197/api/Category')
 
 </script>
