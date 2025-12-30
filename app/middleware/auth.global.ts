@@ -1,4 +1,3 @@
-import { el } from "element-plus/es/locale/index.mjs";
 import { useAuthStore } from "~~/stores/auth";
 
 export default defineNuxtRouteMiddleware(async (to) => {

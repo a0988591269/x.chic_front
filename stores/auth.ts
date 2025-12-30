@@ -46,7 +46,6 @@ export const useAuthStore = defineStore("auth", {
       const api = useApi();
       await api.post("/auth/logout"); // 呼叫後端清除 Cookie
       this.user = null;
-      this.isInitialized = true;
     },
   },
 });
