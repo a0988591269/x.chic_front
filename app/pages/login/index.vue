@@ -1,39 +1,49 @@
 <template>
-  <div
-    class="min-h-screen flex items-center justify-center bg-gradient-to-br from-yellow-200 via-orange-200 to-pink-200">
-    <div class="bg-white px-8 py-10 rounded-2xl shadow-2xl min-w-[320px] max-w-[90vw] flex flex-col items-stretch">
-      <h2 class="text-center mb-6 text-gray-800 font-bold tracking-widest text-2xl">
+  <div class="min-h-screen flex items-center justify-center bg-[#f4f4f3] px-4">
+    <div class="bg-white px-8 py-10 rounded-3xl shadow-[0_8px_30px_rgba(0,0,0,0.06)]
+             w-full max-w-sm flex flex-col">
+      <h2 class="text-center mb-8 text-gray-800 font-semibold tracking-[0.2em] text-xl">
         登入
       </h2>
-      <form @submit.prevent="login" class="grid gap-4">
-        <div class="flex flex-col gap-1">
-          <label for="email" class="text-gray-600 text-base">電子郵件</label>
-          <input id="email" v-model="form.email" type="email" required autocomplete="username"
-            class="px-4 py-2 border border-gray-200 rounded-lg text-base focus:outline-none focus:border-orange-300 transition" />
+
+      <form @submit.prevent="login" class="flex flex-col gap-5">
+        <div class="flex flex-col gap-1.5">
+          <label for="email" class="text-sm text-gray-500">
+            Email
+          </label>
+          <input id="email" v-model="form.email" type="email" required autocomplete="username" class="px-4 py-2.5 rounded-lg border border-gray-200
+                   text-gray-700 placeholder-gray-400
+                   focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-300
+                   transition" />
         </div>
-        <div class="flex flex-col gap-1">
-          <label for="password" class="text-gray-600 text-base">密碼</label>
-          <input id="password" v-model="form.password" type="password" required autocomplete="current-password"
-            class="px-4 py-2 border border-gray-200 rounded-lg text-base focus:outline-none focus:border-orange-300 transition" />
+
+        <div class="flex flex-col gap-1.5">
+          <label for="password" class="text-sm text-gray-500">
+            密碼
+          </label>
+          <input id="password" v-model="form.password" type="password" required autocomplete="current-password" class="px-4 py-2.5 rounded-lg border border-gray-200
+                   text-gray-700
+                   focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-300
+                   transition" />
         </div>
-        <button
-          class="bg-gradient-to-r from-yellow-300 to-pink-400 text-white rounded-lg py-2 font-semibold text-lg mt-2 hover:from-pink-400 hover:to-yellow-300 transition w-28 justify-self-center shadow"
-          type="submit">
-          登入
+
+        <button type="submit" class="mt-6 py-2.5 rounded-xl
+                 bg-gray-800 text-white text-sm font-medium tracking-wider
+                 hover:bg-gray-700 active:bg-gray-900
+                 transition">
+          SIGN IN
         </button>
       </form>
-      <!-- <div class="text-center mt-5 text-gray-500 text-base">
-        <span>已有帳號</span>
-        <a href="#" @click.prevent="isLogin = !isLogin"
-          class="text-pink-400 font-semibold underline ml-1 hover:text-yellow-500 transition">登入</a>
-      </div> -->
-      <div class="text-center mt-5 text-gray-500 text-base">
-        <span>帳號切換：</span>
-        <a href="javascript:void(0);" @click="setAccount('admin')"
-          class="text-pink-400 font-semibold underline ml-1 hover:text-yellow-500 transition">管理員</a>
-        <span>、</span>
-        <a href="javascript:void(0);" @click="setAccount('member')"
-          class="text-pink-400 font-semibold underline ml-1 hover:text-yellow-500 transition">會員</a>
+
+      <div class="text-center mt-6 text-sm text-gray-400">
+        帳號切換：
+        <button class="underline hover:text-gray-600 transition" @click="setAccount('admin')">
+          管理員
+        </button>
+        /
+        <button class="underline hover:text-gray-600 transition" @click="setAccount('member')">
+          會員
+        </button>
       </div>
     </div>
   </div>
