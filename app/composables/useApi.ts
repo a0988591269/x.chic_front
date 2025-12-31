@@ -7,6 +7,8 @@ export const useApi = () => {
   const config = useRuntimeConfig();
   const auth = useAuthStore();
   const isServer = import.meta.server; // 判斷是否在伺服器端執行
+  // 關鍵：在 SSR 時抓取請求的 Cookie header
+  const headers = useRequestHeaders(["cookie"]);
 
   const api = axios.create({
     baseURL: config.public.apiBase,
@@ -18,6 +20,7 @@ export const useApi = () => {
           rejectUnauthorized: false,
         })
       : undefined,
+    headers: headers, // 將 Cookie 轉發給後端 API
   });
 
   // --- Request 攔截器 ---

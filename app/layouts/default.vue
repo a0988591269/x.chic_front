@@ -1,9 +1,19 @@
 <template>
   <div>
-    <UiHeader />
+    <FrontendHeader />
     <div>
       <slot />
     </div>
-    <UiFooter />
+    <FrontendFooter />
   </div>
 </template>
+
+<!-- <template>
+  <div>
+    <BackendHeader />
+    <div>
+      <slot />
+    </div>
+    <BackendFooter />
+  </div>
+</template> -->

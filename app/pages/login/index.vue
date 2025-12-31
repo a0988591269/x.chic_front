@@ -68,6 +68,7 @@ const login = async () => {
   const auth = useAuthStore();
   try {
     await auth.login(form.value);
+    
     if (auth.user && auth.isAuthenticated) {
       const redirect = useRoute().query.redirect;
       navigateTo(Array.isArray(redirect) ? redirect[0] : (redirect ?? "/"));
