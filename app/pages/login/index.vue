@@ -11,7 +11,7 @@
           <label for="email" class="text-sm text-gray-500">
             Email
           </label>
-          <input id="email" v-model="form.email" type="email" required autocomplete="username" class="px-4 py-2.5 rounded-lg border border-gray-200
+          <input id="email" v-model="form.Email" type="email" required autocomplete="username" class="px-4 py-2.5 rounded-lg border border-gray-200
                    text-gray-700 placeholder-gray-400
                    focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-300
                    transition" />
@@ -21,7 +21,7 @@
           <label for="password" class="text-sm text-gray-500">
             密碼
           </label>
-          <input id="password" v-model="form.password" type="password" required autocomplete="current-password" class="px-4 py-2.5 rounded-lg border border-gray-200
+          <input id="password" v-model="form.Password" type="password" required autocomplete="current-password" class="px-4 py-2.5 rounded-lg border border-gray-200
                    text-gray-700
                    focus:outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-300
                    transition" />
@@ -60,18 +60,14 @@ definePageMeta({
 });
 
 const form = ref({
-  email: "",
-  password: "",
+  Email: "",
+  Password: "",
 });
-// Submit 時轉成 FormData
+
 const login = async () => {
   const auth = useAuthStore();
   try {
-    await auth.login({
-      Email: form.value.email,
-      Password: form.value.password,
-    });
-    await auth.checkAuth(); // 登入成功後刷新狀態
+    await auth.login(form.value);
     if (auth.user && auth.isAuthenticated) {
       const redirect = useRoute().query.redirect;
       navigateTo(Array.isArray(redirect) ? redirect[0] : (redirect ?? "/"));
@@ -86,11 +82,11 @@ const login = async () => {
 
 const setAccount = (type: "admin" | "member") => {
   if (type === "admin") {
-    form.value.email = "admin@myapp.com";
-    form.value.password = "12345678";
+    form.value.Email = "admin@myapp.com";
+    form.value.Password = "12345678";
   } else {
-    form.value.email = "customer@myapp.com";
-    form.value.password = "12345678";
+    form.value.Email = "customer@myapp.com";
+    form.value.Password = "12345678";
   }
 };
 </script>

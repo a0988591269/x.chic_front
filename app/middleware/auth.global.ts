@@ -8,13 +8,8 @@ export default defineNuxtRouteMiddleware(async (to) => {
     await auth.checkAuth();
   }
 
-  console.log("已登入狀態下的特殊處理：", auth.isAuthenticated);
-  console.log("目標頁面的 Meta 資訊：", to.meta);
-  console.log("目標頁面的路徑：", to.path);
-
   // 2. 「已登入」且強行進入 /login
   if (auth.isAuthenticated && to.path === "/login") {
-    console.log("偵測到已登入身分，強制從 /login 導回首頁");
     return navigateTo("/", { replace: true }); // 使用 replace 防止使用者點擊「上一頁」回到登入頁
   }
 

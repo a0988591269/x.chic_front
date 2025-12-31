@@ -40,17 +40,32 @@ export const useAuthStore = defineStore("auth", {
     },
 
     // 登入
-    async login(loginData) {
+    async login(loginData: { Email: string; Password: string }) {
       const api = useApi();
-      await api.post("/auth/login", loginData);
+      try {
+        await api.post("/auth/login", loginData);
+        // 登入成功後立即獲取用戶資訊
+        await this.checkAuth();
+        return true;
+      } catch (error) {
+        console.error("登入請求失敗", error);
+      }
     },
 
     // 登出
     async logout() {
       const api = useApi();
-      await api.post("/auth/logout"); // 呼叫後端清除 Cookie
-      this.user = null;
-      this.isInitialized = true;
+      try {
+        await api.post("/auth/logout");
+      } catch (error) {
+        console.error("登出請求失敗", error);
+      } finally {
+        // 無論如何都清空狀態
+        this.user = null;
+        this.isInitialized = true;
+        // 導航到登入頁
+        navigateTo("/login");
+      }
     },
   },
 });
