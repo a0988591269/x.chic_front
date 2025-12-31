@@ -3,7 +3,7 @@ import { useAuthStore } from "~~/stores/auth";
 import https from "https";
 
 export const useApi = () => {
-  // ✅ 只有在 function 被呼叫時才會執行，此時 Nuxt Instance 已經 Ready 了
+  // 只有在 function 被呼叫時才會執行，此時 Nuxt Instance 已經 Ready 了
   const config = useRuntimeConfig();
   const auth = useAuthStore();
   const isServer = import.meta.server; // 判斷是否在伺服器端執行
@@ -49,8 +49,10 @@ export const useApi = () => {
       if (error.response) {
         switch (error.response.status) {
           case 401:
-            // 💀 抓到 401 代表 Cookie 失效或被竄改
-            auth.logout(); // 清除狀態並導向登入頁
+            // 401 代表 Cookie 失效或被竄改
+            // auth.logout(); // 清除狀態並導向登入頁
+            auth.user = null;
+            auth.isInitialized = true;
             break;
           case 403:
             // TODO：403 相關處理

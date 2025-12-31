@@ -12,7 +12,8 @@ interface UserInfo {
 
 export const useAuthStore = defineStore("auth", {
   state: () => ({
-    user: null as UserInfo | null, // 我們只存 User Info，不存 Token
+    user: null as UserInfo | null, // 只存 User Info，不存 Token
+    isInitialized: false, // 關鍵狀態
   }),
   getters: {
     isAuthenticated: (state) => !!state.user,
@@ -26,12 +27,15 @@ export const useAuthStore = defineStore("auth", {
   actions: {
     // F5 重新整理時呼叫這支
     async checkAuth() {
+      const api = useApi();
       try {
         // 這請求會自動帶 Cookie
-        const api = useApi();
-        this.user = await api.get<UserInfo>("/auth/userInfo");
+        const data = await api.get<UserInfo>("/auth/userInfo");
+        this.user = data;
       } catch {
         this.user = null;
+      } finally {
+        this.isInitialized = true;
       }
     },
 
@@ -46,6 +50,7 @@ export const useAuthStore = defineStore("auth", {
       const api = useApi();
       await api.post("/auth/logout"); // 呼叫後端清除 Cookie
       this.user = null;
+      this.isInitialized = true;
     },
   },
 });
