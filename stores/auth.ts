@@ -19,10 +19,10 @@ export const useAuthStore = defineStore("auth", {
     isAuthenticated: (state) => !!state.user,
 
     hasRole: (state) => (role: string) =>
-      state.user?.roles.includes(role) ?? false,
+      state.user?.roles.includes(role.toLowerCase()) ?? false,
 
     hasPermission: (state) => (perm: string) =>
-      state.user?.permissions.includes(perm) ?? false,
+      state.user?.permissions.includes(perm.toLowerCase()) ?? false,
   },
   actions: {
     // F5 重新整理時呼叫這支
@@ -45,12 +45,23 @@ export const useAuthStore = defineStore("auth", {
 
       try {
         // [Step 2] 發送 API 請求獲取最新資料 (背景驗證)
-        const data = await api.get<UserInfo>("/auth/userInfo");
+        const data = (await api.get("/auth/userInfo")) as UserInfo | null;
 
-        // [Step 3] API 成功，更新 State 並同步寫入 LocalStorage
-        this.user = data;
-        if (import.meta.client) {
-          localStorage.setItem("auth_user", JSON.stringify(data));
+        if (data) {
+          // 將角色與權限轉成小寫，方便後續比對
+          data.roles = normalizeToLowerArray(data.roles);
+          data.permissions = normalizeToLowerArray(data.permissions);
+
+          // [Step 3] API 成功，更新 State 並同步寫入 LocalStorage
+          this.user = data;
+          if (import.meta.client) {
+            localStorage.setItem("auth_user", JSON.stringify(data));
+          }
+        } else {
+          this.user = null;
+          if (import.meta.client) {
+            localStorage.removeItem("auth_user");
+          }
         }
       } catch (error) {
         // [Step 4] API 失敗 (例如 Cookie 過期)，清空 State 與 LocalStorage
@@ -58,6 +69,7 @@ export const useAuthStore = defineStore("auth", {
         if (import.meta.client) {
           localStorage.removeItem("auth_user");
         }
+        console.error("使用者資訊請求失敗", error);
       } finally {
         this.isInitialized = true;
       }
@@ -98,3 +110,12 @@ export const useAuthStore = defineStore("auth", {
     },
   },
 });
+
+function normalizeToLowerArray(
+  value: string | string[] | undefined | null
+): string[] {
+  if (!value) return [];
+  return Array.isArray(value)
+    ? value.map((v) => v.toLowerCase())
+    : [value.toLowerCase()];
+}

@@ -53,7 +53,10 @@ export const useApi = () => {
         switch (error.response.status) {
           case 401:
             // 401 代表 Cookie 失效或被竄改
-            auth.logout(); // 清除狀態
+            if (import.meta.client) {
+              // 伺服器端直接返回
+              auth.logout(); // 清除狀態
+            }
             break;
           case 403:
             // TODO：403 相關處理
