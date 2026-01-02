@@ -38,15 +38,6 @@ export const useAdminMenu = () => {
           ],
         },
         {
-          label: "內容管理",
-          icon: "i-lucide-file-text",
-          children: [
-            { label: "文章", to: "/admin/posts" },
-            { label: "分類", to: "/admin/categories" },
-            { label: "標籤", to: "/admin/tags" },
-          ],
-        },
-        {
           label: "訂單管理",
           icon: "i-lucide-shopping-cart",
           children: [
