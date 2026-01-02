@@ -26,6 +26,10 @@
 
     <!-- Right -->
     <div class="ml-auto flex items-center gap-2 min-w-[160px] justify-end">
+      <template v-if="isLogin && auth.hasRole('admin')">
+        <NuxtLink to="/admin" class="text-zinc-600">後台</NuxtLink>
+      </template>
+
       <NuxtLink to="/" class="w-[60px] h-[30px] flex items-center justify-center text-zinc-600">
         購物車
       </NuxtLink>
@@ -37,9 +41,9 @@
       </template>
 
       <template v-else>
-        <button class="text-zinc-600" @click="auth.logout()">
+        <a href="javascript:void(0);" class="text-zinc-600" @click="auth.logout()">
           登出
-        </button>
+        </a>
       </template>
     </div>
   </div>
