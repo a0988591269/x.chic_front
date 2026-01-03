@@ -10,7 +10,7 @@ export default defineNuxtConfig({
   // 這是給 app/utils/api.ts 用的
   runtimeConfig: {
     public: {
-      apiBase: 'https://localhost:7197/api', // 請根據實際情況修改
+      apiBase: "https://localhost:7197/api", // 請根據實際情況修改
     },
   },
   css: [

@@ -25,37 +25,31 @@ export const useAuthStore = defineStore("auth", {
       state.user?.permissions.includes(perm.toLowerCase()) ?? false,
   },
   actions: {
-    // F5 重新整理時呼叫這支
     async checkAuth() {
       const api = useApi();
 
-      // [Step 1] 優先從 LocalStorage 恢復資料 (Client 端專用)
-      // 這能讓使用者感覺「資料還在」，解決 F5 瞬間變成 null 的問題
+      // 解決 F5 在SSR階段 null 的問題
       if (import.meta.client) {
         const cachedUser = localStorage.getItem("auth_user");
         if (cachedUser) {
           try {
             this.user = JSON.parse(cachedUser);
-          } catch (e) {
-            console.error("解析快取失敗", e);
+          } catch {
             localStorage.removeItem("auth_user");
           }
         }
       }
 
       try {
-        // [Step 2] 發送 API 請求獲取最新資料 (背景驗證)
-        const data = (await api.get("/auth/userInfo")) as UserInfo | null;
-
-        if (data) {
+        const resp = (await api.get<UserInfo | null>("/auth/userInfo")).data;
+        console.log(resp, "123");
+        if (resp) {
           // 將角色與權限轉成小寫，方便後續比對
-          data.roles = normalizeToLowerArray(data.roles);
-          data.permissions = normalizeToLowerArray(data.permissions);
-
-          // [Step 3] API 成功，更新 State 並同步寫入 LocalStorage
-          this.user = data;
+          resp.roles = normalizeToLowerArray(resp.roles);
+          resp.permissions = normalizeToLowerArray(resp.permissions);
+          this.user = resp;
           if (import.meta.client) {
-            localStorage.setItem("auth_user", JSON.stringify(data));
+            localStorage.setItem("auth_user", JSON.stringify(resp));
           }
         } else {
           this.user = null;
@@ -63,13 +57,11 @@ export const useAuthStore = defineStore("auth", {
             localStorage.removeItem("auth_user");
           }
         }
-      } catch (error) {
-        // [Step 4] API 失敗 (例如 Cookie 過期)，清空 State 與 LocalStorage
+      } catch {
         this.user = null;
         if (import.meta.client) {
           localStorage.removeItem("auth_user");
         }
-        console.error("使用者資訊請求失敗", error);
       } finally {
         this.isInitialized = true;
       }
@@ -99,12 +91,9 @@ export const useAuthStore = defineStore("auth", {
         // 清空狀態
         this.user = null;
         this.isInitialized = true;
-
-        // 🛠️ 記得一併清除 LocalStorage
         if (import.meta.client) {
           localStorage.removeItem("auth_user");
         }
-
         navigateTo("/login");
       }
     },

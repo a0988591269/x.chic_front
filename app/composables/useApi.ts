@@ -45,8 +45,7 @@ export const useApi = () => {
   // --- Response 攔截器 ---
   api.interceptors.response.use(
     (response) => {
-      // 直接回傳 data，減少組件端解構的負擔
-      return response.data;
+      return response;
     },
     async (error) => {
       if (error.response) {
