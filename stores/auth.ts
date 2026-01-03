@@ -41,7 +41,7 @@ export const useAuthStore = defineStore("auth", {
       }
 
       try {
-        const resp = (await api.get<UserInfo | null>("/auth/userInfo")).data;
+        const { data: resp } = await api.get<UserInfo | null>("/auth/userInfo");
 
         if (resp) {
           // 將角色與權限轉成小寫，方便後續比對
