@@ -42,7 +42,7 @@ export const useAuthStore = defineStore("auth", {
 
       try {
         const resp = (await api.get<UserInfo | null>("/auth/userInfo")).data;
-        console.log(resp, "123");
+
         if (resp) {
           // 將角色與權限轉成小寫，方便後續比對
           resp.roles = normalizeToLowerArray(resp.roles);
