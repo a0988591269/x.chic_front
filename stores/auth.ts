@@ -74,9 +74,18 @@ export const useAuthStore = defineStore("auth", {
         await api.post("/auth/login", loginData);
         // 登入成功後，checkAuth 會自動寫入 LocalStorage
         await this.checkAuth();
+
+        if (this.hasRole("admin")) {
+          // 管理員 -> 轉跳後台首頁
+          await navigateTo("/admin");
+        } else {
+          // 一般會員 -> 轉跳前台首頁
+          await navigateTo("/");
+        }
+
         return true;
-      } catch (error) {
-        console.error("登入請求失敗", error);
+      } catch {
+        return false;
       }
     },
 

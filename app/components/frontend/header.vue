@@ -37,7 +37,7 @@
       <template v-if="!isLogin">
         <NuxtLink to="/login" class="text-zinc-600">登入</NuxtLink>
         <span class="text-zinc-400">/</span>
-        <NuxtLink to="/login" class="text-zinc-600">註冊</NuxtLink>
+        <NuxtLink to="/signup" class="text-zinc-600">註冊</NuxtLink>
       </template>
 
       <template v-else>

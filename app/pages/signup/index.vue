@@ -6,10 +6,10 @@
       <h2
         class="text-center mb-8 text-gray-800 font-semibold tracking-[0.2em] text-xl"
       >
-        登入
+        註冊
       </h2>
 
-      <form @submit.prevent="login" class="flex flex-col gap-5">
+      <form @submit.prevent="signup" class="flex flex-col gap-5">
         <div class="flex flex-col gap-1.5">
           <label for="email" class="text-sm text-gray-500"> Email </label>
           <input
@@ -38,26 +38,9 @@
           type="submit"
           class="mt-6 py-2.5 rounded-xl bg-gray-800 text-white text-sm font-medium tracking-wider hover:bg-gray-700 active:bg-gray-900 transition"
         >
-          SIGN IN
+          SIGN UP
         </button>
       </form>
-
-      <div class="text-center mt-6 text-sm text-gray-400">
-        帳號切換：
-        <button
-          class="underline hover:text-gray-600 transition"
-          @click="setAccount('admin')"
-        >
-          管理員
-        </button>
-        /
-        <button
-          class="underline hover:text-gray-600 transition"
-          @click="setAccount('member')"
-        >
-          會員
-        </button>
-      </div>
     </div>
   </div>
 </template>
@@ -77,25 +60,8 @@ const form = ref({
   Password: "",
 });
 
-const login = async () => {
-  const auth = useAuthStore();
-  const islogin = await auth.login(form.value);
-
-  if (islogin) {
-    ElMessage.success("登入成功");
-  } else {
-    ElMessage.error("帳號或密碼錯誤");
-  }
-};
-
-const setAccount = (type: "admin" | "member") => {
-  if (type === "admin") {
-    form.value.Email = "admin@myapp.com";
-    form.value.Password = "12345678";
-  } else {
-    form.value.Email = "customer@myapp.com";
-    form.value.Password = "12345678";
-  }
+const signup = async () => {
+    
 };
 </script>
 
