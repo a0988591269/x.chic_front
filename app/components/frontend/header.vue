@@ -26,6 +26,9 @@
 
     <!-- Right -->
     <div class="ml-auto flex items-center gap-2 min-w-[160px] justify-end">
+      <template v-if="isLogin">
+        <span class="text-zinc-600"> {{ auth.user?.userName }}：{{ auth.user?.email }} </span>
+      </template>
       <template v-if="isLogin && auth.hasRole('admin')">
         <NuxtLink to="/admin" class="text-zinc-600">後台</NuxtLink>
       </template>
