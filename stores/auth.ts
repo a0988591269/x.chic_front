@@ -103,7 +103,20 @@ export const useAuthStore = defineStore("auth", {
         if (import.meta.client) {
           localStorage.removeItem("auth_user");
         }
-        navigateTo("/login");
+        await navigateTo("/login");
+      }
+    },
+
+    // 註冊
+    async signup(loginData: { Email: string; Password: string }) {
+      const api = useApi();
+      try {
+        await api.post("/auth/signup", loginData);
+        await this.login(loginData);
+        return true;
+      } catch (error) {
+        console.error("註冊失敗", error);
+        return false;
       }
     },
   },

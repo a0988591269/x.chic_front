@@ -158,7 +158,7 @@ interface Product {
   imageUrl: string;
 }
 const api = useApi();
-const resp = await api.get<Product[]>(`/Product/GetBySlug/${category}`);
+const { data: resp } = (await api.get<Product[]>(`/Product/GetBySlug/${category}`));
 // const allProducts = ref([
 //     {
 //         id: 1,

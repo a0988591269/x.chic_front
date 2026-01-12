@@ -456,9 +456,7 @@ const { category, productId } = route.params;
 console.log("目前類別：", category, "產品ID：", productId);
 // 實際型別是 Ref<ProductDetail | null>
 const api = useApi();
-const product = await api.get<ProductDetail>(
-  `/Product/GetProductDetail/${productId}`
-);
+const { data: product } = await api.get<ProductDetail>(`/Product/GetProductDetail/${productId}`);
 
 // --- 3. 狀態管理 ---
 const activeImageIndex = ref(0);
