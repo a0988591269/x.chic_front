@@ -83,9 +83,10 @@ const login = async () => {
 
   if (islogin) {
     ElMessage.success("登入成功");
-  } else {
-    ElMessage.error("帳號或密碼錯誤");
-  }
+  } 
+  // else {
+  //   ElMessage.error("帳號或密碼錯誤");
+  // }
 };
 
 const setAccount = (type: "admin" | "member") => {

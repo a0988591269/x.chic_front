@@ -114,8 +114,7 @@ export const useAuthStore = defineStore("auth", {
         await api.post("/auth/signup", loginData);
         await this.login(loginData);
         return true;
-      } catch (error) {
-        console.error("註冊失敗", error);
+      } catch {
         return false;
       }
     },

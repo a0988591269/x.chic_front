@@ -52,7 +52,7 @@ export const useApi = () => {
       if (error.response) {
         switch (error.response.status) {
           case 400:
-            ElMessage.error("參數錯誤", error.response.data);
+            ElMessage.error(error.response.data.error);
             break;
           case 401:
             // 401 代表 Cookie 失效或被竄改
@@ -62,17 +62,17 @@ export const useApi = () => {
             }
             break;
           case 403:
-            ElMessage.warning("你沒有權限執行此操作！")
+            ElMessage.warning("你沒有權限執行此操作！");
             break;
           case 404:
-            navigateTo("/app/pages/[...error].vue")
+            navigateTo("/404");
             break;
           case 500:
-            ElMessage.error("系統忙碌中！")
+            ElMessage.error("系統忙碌中！");
             break;
         }
       } else {
-        ElMessage.error("網路 或 CORS 錯誤！")
+        ElMessage.error("網路 或 CORS 錯誤！");
       }
 
       return Promise.reject(error);
