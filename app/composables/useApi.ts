@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useAuthStore } from "~~/stores/auth";
 import https from "https";
+import { ElMessage } from "element-plus";
 
 export const useApi = () => {
   // 只有在 function 被呼叫時才會執行，此時 Nuxt Instance 已經 Ready 了
@@ -50,6 +51,9 @@ export const useApi = () => {
     async (error) => {
       if (error.response) {
         switch (error.response.status) {
+          case 400:
+            ElMessage.error("參數錯誤", error.response.data);
+            break;
           case 401:
             // 401 代表 Cookie 失效或被竄改
             if (import.meta.client) {
@@ -58,14 +62,17 @@ export const useApi = () => {
             }
             break;
           case 403:
-            // TODO：403 相關處理
+            ElMessage.warning("你沒有權限執行此操作！")
+            break;
+          case 404:
+            navigateTo("/app/pages/[...error].vue")
             break;
           case 500:
-            // TODO：500 相關處理
+            ElMessage.error("系統忙碌中！")
             break;
         }
       } else {
-        // TODO：網路錯誤或 CORS 錯誤處理
+        ElMessage.error("網路 或 CORS 錯誤！")
       }
 
       return Promise.reject(error);
