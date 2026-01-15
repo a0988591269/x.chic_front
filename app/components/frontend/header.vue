@@ -113,5 +113,4 @@ const toggleCollapse = () => {
 };
 const api = useApi();
 const { data: resp } = (await api.get<Category[]>("/category"));
-console.log(resp);
 </script>

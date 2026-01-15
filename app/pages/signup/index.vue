@@ -48,7 +48,6 @@
 <script lang="ts" setup>
 import { ref } from "vue";
 import { useAuthStore } from "~~/stores/auth";
-import { ElMessage } from "element-plus";
 
 definePageMeta({
   // 標記為「訪客專用 / 登入專用」，配合 auth.global.ts 使用
@@ -61,13 +60,14 @@ const form = ref({
 });
 
 const signup = async () => {
+  const toast = useToast();
   const auth = useAuthStore();
   const isSignup = await auth.signup(form.value);
 
   if (isSignup) {
-    ElMessage.success("註冊成功");
+    toast.add({ title: "註冊成功", color: "success" });
   } else {
-    ElMessage.error("註冊失敗");
+    toast.add({ title: "註冊失敗", color: "error" });
   }
 };
 </script>

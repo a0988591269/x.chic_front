@@ -1,12 +1,12 @@
 import axios from "axios";
 import { useAuthStore } from "~~/stores/auth";
 import https from "https";
-import { ElMessage } from "element-plus";
 
 export const useApi = () => {
   // 只有在 function 被呼叫時才會執行，此時 Nuxt Instance 已經 Ready 了
   const config = useRuntimeConfig();
   const auth = useAuthStore();
+  const toast = useToast();
   const isServer = import.meta.server; // 判斷是否在伺服器端執行
   // 關鍵：在 SSR 時抓取請求的 Cookie header
   const headers = useRequestHeaders(["cookie"]);
@@ -52,7 +52,7 @@ export const useApi = () => {
       if (error.response) {
         switch (error.response.status) {
           case 400:
-            ElMessage.error(error.response.data.error);
+            toast.add({ title: "error.response.data.error", color: "error" });
             break;
           case 401:
             // 401 代表 Cookie 失效或被竄改
@@ -62,17 +62,17 @@ export const useApi = () => {
             }
             break;
           case 403:
-            ElMessage.warning("你沒有權限執行此操作！");
+            toast.add({ title: "你沒有權限執行此操作！", color: "warning" });
             break;
           case 404:
             navigateTo("/404");
             break;
           case 500:
-            ElMessage.error("系統忙碌中！");
+            toast.add({ title: "系統忙碌中！", color: "error" });
             break;
         }
       } else {
-        ElMessage.error("網路 或 CORS 錯誤！");
+        toast.add({ title: "網路 或 CORS 錯誤！", color: "error" });
       }
 
       return Promise.reject(error);

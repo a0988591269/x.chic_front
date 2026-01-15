@@ -65,7 +65,6 @@
 <script lang="ts" setup>
 import { ref } from "vue";
 import { useAuthStore } from "~~/stores/auth";
-import { ElMessage } from "element-plus";
 
 definePageMeta({
   // 標記為「訪客專用 / 登入專用」，配合 auth.global.ts 使用
@@ -78,15 +77,13 @@ const form = ref({
 });
 
 const login = async () => {
+  const toast = useToast();
   const auth = useAuthStore();
   const islogin = await auth.login(form.value);
 
   if (islogin) {
-    ElMessage.success("登入成功");
-  } 
-  // else {
-  //   ElMessage.error("帳號或密碼錯誤");
-  // }
+    toast.add({ title: "登入成功", color: "success" });
+  }
 };
 
 const setAccount = (type: "admin" | "member") => {
