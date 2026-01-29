@@ -7,10 +7,19 @@ export default defineNuxtConfig({
   imports: {
     autoImport: true,
   },
-  // 這是給 app/utils/api.ts 用的
+  routeRules: {
+    // 當前端打 /api/xxx 時，Nuxt Server 會幫你轉發到後端
+    "/api/**": {
+      proxy: `${process.env.NUXT_API_SECRET}/**`
+    },
+  },
+  // 定義環境變數(.env 的值會自動帶進來)
   runtimeConfig: {
+    // 注意：這邊的值只有在伺服器端可以存取
+    apiSecret: "",
+    // 注意：這邊的值可以在伺服器端與客戶端存取
     public: {
-      apiBase: "https://localhost:7197/api", // 請根據實際情況修改
+      apiBase: "",
     },
   },
   css: [

@@ -10,15 +10,18 @@ export const useApi = () => {
   const isServer = import.meta.server; // 判斷是否在伺服器端執行
   // 關鍵：在 SSR 時抓取請求的 Cookie header
   const headers = useRequestHeaders(["cookie"]);
+  // 如果是 Client (瀏覽器) -> 用 public.apiBase ('/api')
+  // 如果是 Server (SSR)    -> 用 apiSecret ('https://localhost:7197/api')
+  const url: string = isServer ? (config.apiSecret as string) : (config.public.apiBase as string);
 
   const api = axios.create({
-    baseURL: config.public.apiBase,
+    baseURL: url,
     withCredentials: true, // 讓 Axios 請求自動攜帶 Cookie
     timeout: 10000, // 可根據需求調整超時時間
-    // 只在開發環境的伺服器端禁用 SSL 驗證
+    // 解決本地開發 HTTPS 自簽憑證報錯問題
     httpsAgent: isServer
       ? new https.Agent({
-          rejectUnauthorized: false,
+          rejectUnauthorized: false,  // 允許開發環境的不安全憑證
         })
       : undefined,
     headers: headers, // 將 Cookie 轉發給後端 API
@@ -40,7 +43,7 @@ export const useApi = () => {
     },
     (error) => {
       return Promise.reject(error);
-    }
+    },
   );
 
   // --- Response 攔截器 ---
@@ -76,7 +79,7 @@ export const useApi = () => {
       }
 
       return Promise.reject(error);
-    }
+    },
   );
 
   return api;
