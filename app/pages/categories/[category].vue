@@ -5,30 +5,16 @@
       <div class="flex-1 flex flex-col md:flex-row gap-4">
         <!-- 搜尋 -->
         <div class="flex items-center gap-2">
-          <input
-            v-model="filters.keyword"
-            type="text"
-            placeholder="搜尋商品名稱"
-            class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:border-pink-400 transition w-48"
-          />
+          <input v-model="filters.keyword" type="text" placeholder="搜尋商品名稱"
+            class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:border-pink-400 transition w-48" />
         </div>
         <!-- 價格區間 -->
         <div class="flex items-center gap-2">
-          <input
-            v-model.number="filters.priceMin"
-            type="number"
-            min="0"
-            placeholder="最低價"
-            class="border border-gray-300 rounded-lg px-3 py-2 w-20 focus:outline-none focus:border-pink-400 transition"
-          />
+          <input v-model.number="filters.priceMin" type="number" min="0" placeholder="最低價"
+            class="border border-gray-300 rounded-lg px-3 py-2 w-20 focus:outline-none focus:border-pink-400 transition" />
           <span class="text-gray-400">-</span>
-          <input
-            v-model.number="filters.priceMax"
-            type="number"
-            min="0"
-            placeholder="最高價"
-            class="border border-gray-300 rounded-lg px-3 py-2 w-20 focus:outline-none focus:border-pink-400 transition"
-          />
+          <input v-model.number="filters.priceMax" type="number" min="0" placeholder="最高價"
+            class="border border-gray-300 rounded-lg px-3 py-2 w-20 focus:outline-none focus:border-pink-400 transition" />
         </div>
         <!-- 類別 -->
         <!-- <div>
@@ -39,49 +25,31 @@
                     </select>
                 </div> -->
       </div>
-      <button
-        @click="resetFilters"
-        class="bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-lg px-4 py-2 font-medium transition"
-      >
+      <button @click="resetFilters"
+        class="bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-lg px-4 py-2 font-medium transition">
         清除條件
       </button>
     </div>
 
     <!-- 商品列表 -->
-    <div
-      class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
-    >
-      <div
-        v-for="item in pagedProducts"
-        :key="item.productId"
-        class="bg-white rounded-xl shadow hover:shadow-lg transition flex flex-col"
-      >
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      <div v-for="item in pagedProducts" :key="item.productId"
+        class="bg-white rounded-xl shadow hover:shadow-lg transition flex flex-col">
         <NuxtLink :to="`/products/${category}/${item.productId}`">
-          <img
-            :src="`http://localhost:5042${item.imageUrl}`"
-            :alt="`${item.productName}`"
-            class="rounded-t-xl object-cover h-48 w-full"
-          />
+          <img :src="`http://localhost:5042${item.imageUrl}`" :alt="`${item.productName}`"
+            class="rounded-t-xl object-cover h-48 w-full" />
           <div class="p-4 flex-1 flex flex-col">
             <h3 class="font-semibold text-lg text-gray-800 mb-1 truncate">
               {{ item.productName }}
             </h3>
             <div class="flex items-center gap-2 mb-2">
-              <span
-                v-if="item.discountPrice < item.price"
-                class="text-pink-500 font-bold text-xl"
-              >
+              <span v-if="item.discountPrice < item.price" class="text-pink-500 font-bold text-xl">
                 ${{ item.discountPrice }}
               </span>
-              <span
-                v-if="item.discountPrice < item.price"
-                class="text-gray-400 line-through text-sm"
-              >
+              <span v-if="item.discountPrice < item.price" class="text-gray-400 line-through text-sm">
                 ${{ item.price }}
               </span>
-              <span v-else class="text-gray-800 font-bold text-xl"
-                >${{ item.price }}</span
-              >
+              <span v-else class="text-gray-800 font-bold text-xl">${{ item.price }}</span>
             </div>
             <div class="text-gray-500 text-sm mb-2">
               銷售量：{{ item.totalSales }}
@@ -94,31 +62,20 @@
     <!-- 分頁 -->
     <div class="flex justify-center mt-10">
       <nav class="inline-flex rounded-md shadow-sm" aria-label="Pagination">
-        <button
-          @click="prevPage"
-          :disabled="page === 1"
-          class="px-3 py-1 rounded-l-md border border-gray-300 bg-white text-gray-500 hover:bg-gray-100 disabled:opacity-50"
-        >
+        <button @click="prevPage" :disabled="page === 1"
+          class="px-3 py-1 rounded-l-md border border-gray-300 bg-white text-gray-500 hover:bg-gray-100 disabled:opacity-50">
           上一頁
         </button>
-        <button
-          v-for="p in totalPages"
-          :key="p"
-          @click="goPage(p)"
-          :class="[
-            'px-3 py-1 border-t border-b border-gray-300 bg-white text-gray-700 hover:bg-pink-100',
-            p === page
-              ? 'font-bold text-pink-500 border-pink-400'
-              : 'border-gray-300',
-          ]"
-        >
+        <button v-for="p in totalPages" :key="p" @click="goPage(p)" :class="[
+          'px-3 py-1 border-t border-b border-gray-300 bg-white text-gray-700 hover:bg-pink-100',
+          p === page
+            ? 'font-bold text-pink-500 border-pink-400'
+            : 'border-gray-300',
+        ]">
           {{ p }}
         </button>
-        <button
-          @click="nextPage"
-          :disabled="page === totalPages"
-          class="px-3 py-1 rounded-r-md border border-gray-300 bg-white text-gray-500 hover:bg-gray-100 disabled:opacity-50"
-        >
+        <button @click="nextPage" :disabled="page === totalPages"
+          class="px-3 py-1 rounded-r-md border border-gray-300 bg-white text-gray-500 hover:bg-gray-100 disabled:opacity-50">
           下一頁
         </button>
       </nav>
@@ -158,7 +115,7 @@ interface Product {
   imageUrl: string;
 }
 const api = useApi();
-const { data: resp } = (await api.get<Product[]>(`/Product/GetBySlug/${category}`));
+const { data: resp } = (await api.get<Product[]>(`/api/Product/GetBySlug/${category}`));
 // const allProducts = ref([
 //     {
 //         id: 1,

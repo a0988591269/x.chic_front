@@ -10,9 +10,11 @@ export const useApi = () => {
   const isServer = import.meta.server; // 判斷是否在伺服器端執行
   // 關鍵：在 SSR 時抓取請求的 Cookie header
   const headers = useRequestHeaders(["cookie"]);
-  // 如果是 Client (瀏覽器) -> 用 public.apiBase ('/api')
-  // 如果是 Server (SSR)    -> 用 apiSecret ('https://localhost:7197/api')
-  const url: string = isServer ? (config.apiSecret as string) : (config.public.apiBase as string);
+  // 如果是 Client (瀏覽器) -> 用 public.apiBase ('/')
+  // 如果是 Server (SSR)    -> 用 apiSecret ('https://localhost:7197')
+  const url: string = isServer
+    ? (config.apiSecret as string)
+    : (config.public.apiBase as string);
 
   const api = axios.create({
     baseURL: url,
@@ -21,7 +23,7 @@ export const useApi = () => {
     // 解決本地開發 HTTPS 自簽憑證報錯問題
     httpsAgent: isServer
       ? new https.Agent({
-          rejectUnauthorized: false,  // 允許開發環境的不安全憑證
+          rejectUnauthorized: false, // 允許開發環境的不安全憑證
         })
       : undefined,
     headers: headers, // 將 Cookie 轉發給後端 API

@@ -41,7 +41,9 @@ export const useAuthStore = defineStore("auth", {
       }
 
       try {
-        const { data: resp } = await api.get<UserInfo | null>("/auth/userInfo");
+        const { data: resp } = await api.get<UserInfo | null>(
+          "/api/auth/userInfo",
+        );
 
         if (resp) {
           // 將角色與權限轉成小寫，方便後續比對
@@ -71,7 +73,7 @@ export const useAuthStore = defineStore("auth", {
     async login(loginData: { Email: string; Password: string }) {
       const api = useApi();
       try {
-        await api.post("/auth/login", loginData);
+        await api.post("/api/auth/login", loginData);
         // 登入成功後，checkAuth 會自動寫入 LocalStorage
         await this.checkAuth();
 
@@ -93,7 +95,7 @@ export const useAuthStore = defineStore("auth", {
     async logout() {
       const api = useApi();
       try {
-        await api.post("/auth/logout");
+        await api.post("/api/auth/logout");
       } catch (error) {
         console.error("登出請求失敗", error);
       } finally {
@@ -111,7 +113,7 @@ export const useAuthStore = defineStore("auth", {
     async signup(loginData: { Email: string; Password: string }) {
       const api = useApi();
       try {
-        await api.post("/auth/signup", loginData);
+        await api.post("/api/auth/signup", loginData);
         await this.login(loginData);
         return true;
       } catch {
@@ -122,7 +124,7 @@ export const useAuthStore = defineStore("auth", {
 });
 
 function normalizeToLowerArray(
-  value: string | string[] | undefined | null
+  value: string | string[] | undefined | null,
 ): string[] {
   if (!value) return [];
   return Array.isArray(value)

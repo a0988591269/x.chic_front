@@ -3,30 +3,18 @@
     <div class="flex flex-col md:flex-row gap-10">
       <div class="md:w-1/2 flex flex-col items-center">
         <div
-          class="w-full aspect-square bg-gray-50 rounded-xl flex items-center justify-center overflow-hidden relative group border border-gray-100"
-        >
-          <img
-            :src="`http://localhost:5042${currentImages[activeImageIndex]}`"
-            :alt="product.name"
-            class="object-contain w-full h-full transition-transform duration-500 group-hover:scale-105"
-          />
+          class="w-full aspect-square bg-gray-50 rounded-xl flex items-center justify-center overflow-hidden relative group border border-gray-100">
+          <img :src="`http://localhost:5042${currentImages[activeImageIndex]}`" :alt="product.name"
+            class="object-contain w-full h-full transition-transform duration-500 group-hover:scale-105" />
         </div>
         <div class="flex gap-3 mt-4 overflow-x-auto w-full px-1 py-1">
-          <button
-            v-for="(img, idx) in currentImages"
-            :key="idx"
-            @click="activeImageIndex = idx"
-            :class="[
-              'w-20 h-20 flex-shrink-0 rounded-lg border-2 overflow-hidden transition-all',
-              activeImageIndex === idx
-                ? 'border-gray-800 opacity-100'
-                : 'border-transparent opacity-60 hover:opacity-100',
-            ]"
-          >
-            <img
-              :src="`http://localhost:5042${img}`"
-              class="w-full h-full object-cover"
-            />
+          <button v-for="(img, idx) in currentImages" :key="idx" @click="activeImageIndex = idx" :class="[
+            'w-20 h-20 flex-shrink-0 rounded-lg border-2 overflow-hidden transition-all',
+            activeImageIndex === idx
+              ? 'border-gray-800 opacity-100'
+              : 'border-transparent opacity-60 hover:opacity-100',
+          ]">
+            <img :src="`http://localhost:5042${img}`" class="w-full h-full object-cover" />
           </button>
         </div>
       </div>
@@ -40,31 +28,19 @@
         </div>
 
         <div class="flex items-baseline gap-3">
-          <template
-            v-if="displayDiscountPrice && displayDiscountPrice < displayPrice"
-          >
-            <span class="text-3xl font-bold text-red-600"
-              >${{ displayDiscountPrice }}</span
-            >
-            <span class="text-lg text-gray-400 line-through"
-              >${{ displayPrice }}</span
-            >
-            <span
-              class="bg-red-50 text-red-600 text-xs font-bold px-2 py-1 rounded"
-            >
+          <template v-if="displayDiscountPrice && displayDiscountPrice < displayPrice">
+            <span class="text-3xl font-bold text-red-600">${{ displayDiscountPrice }}</span>
+            <span class="text-lg text-gray-400 line-through">${{ displayPrice }}</span>
+            <span class="bg-red-50 text-red-600 text-xs font-bold px-2 py-1 rounded">
               -{{ discountPercent }}%
             </span>
           </template>
           <template v-else>
-            <span class="text-3xl font-bold text-gray-900"
-              >${{ displayPrice }}</span
-            >
+            <span class="text-3xl font-bold text-gray-900">${{ displayPrice }}</span>
           </template>
         </div>
 
-        <div
-          class="flex items-center gap-4 text-sm text-gray-600 border-b border-gray-100 pb-4"
-        >
+        <div class="flex items-center gap-4 text-sm text-gray-600 border-b border-gray-100 pb-4">
           <span>已售出 {{ product.sales }}</span>
           <span class="w-px h-4 bg-gray-300"></span>
           <span class="flex items-center gap-1 text-yellow-500 font-bold">
@@ -79,12 +55,8 @@
               {{ option.name }}
             </h3>
             <div class="flex flex-wrap gap-2">
-              <button
-                v-for="val in option.values"
-                :key="val.id"
-                @click="handleSelectOption(option.name, val.id)"
-                :disabled="isOptionDisabled(option.name, val.id)"
-                :class="[
+              <button v-for="val in option.values" :key="val.id" @click="handleSelectOption(option.name, val.id)"
+                :disabled="isOptionDisabled(option.name, val.id)" :class="[
                   'px-4 py-2 border rounded-md text-sm transition-all relative',
                   // 1. 選中狀態
                   selectedOptions[option.name] === val.id
@@ -94,8 +66,7 @@
                   isOptionDisabled(option.name, val.id)
                     ? 'opacity-40 cursor-not-allowed bg-gray-50 decoration-slate-400 line-through'
                     : '',
-                ]"
-              >
+                ]">
                 {{ val.value }}
               </button>
             </div>
@@ -104,13 +75,8 @@
 
         <div class="p-4 bg-gray-50 rounded-lg mt-2">
           <div class="flex items-center justify-between mb-3">
-            <label for="qty" class="text-sm font-bold text-gray-700"
-              >購買數量</label
-            >
-            <span
-              v-if="currentVariant"
-              class="text-sm text-blue-600 font-medium"
-            >
+            <label for="qty" class="text-sm font-bold text-gray-700">購買數量</label>
+            <span v-if="currentVariant" class="text-sm text-blue-600 font-medium">
               剩餘庫存: {{ currentVariant.stockQty }}
             </span>
             <span v-else class="text-sm text-gray-400">請選擇規格查看庫存</span>
@@ -118,38 +84,21 @@
 
           <div class="flex gap-4">
             <div class="relative w-32">
-              <select
-                id="qty"
-                v-model="quantity"
-                class="w-full appearance-none border border-gray-300 rounded-lg px-4 py-2 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent"
-              >
-                <option
-                  v-for="n in currentVariant?.stockQty || 20"
-                  :key="n"
-                  :value="n"
-                >
+              <select id="qty" v-model="quantity"
+                class="w-full appearance-none border border-gray-300 rounded-lg px-4 py-2 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent">
+                <option v-for="n in currentVariant?.stockQty || 20" :key="n" :value="n">
                   {{ n }}
                 </option>
               </select>
-              <div
-                class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700"
-              >
-                <svg
-                  class="fill-current h-4 w-4"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"
-                  />
+              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                  <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
                 </svg>
               </div>
             </div>
 
-            <button
-              :disabled="!currentVariant || currentVariant.stockQty <= 0"
-              class="flex-1 py-2 rounded-lg font-bold text-lg shadow-sm transition-all disabled:bg-gray-300 disabled:cursor-not-allowed bg-gray-800 text-white hover:bg-gray-900 hover:shadow-lg"
-            >
+            <button :disabled="!currentVariant || currentVariant.stockQty <= 0"
+              class="flex-1 py-2 rounded-lg font-bold text-lg shadow-sm transition-all disabled:bg-gray-300 disabled:cursor-not-allowed bg-gray-800 text-white hover:bg-gray-900 hover:shadow-lg">
               {{
                 currentVariant
                   ? currentVariant.stockQty > 0
@@ -171,22 +120,14 @@
 
     <div class="mt-16">
       <div class="flex border-b border-gray-200">
-        <button
-          v-for="tab in tabs"
-          :key="tab.key"
-          @click="activeTab = tab.key"
-          :class="[
-            'px-8 py-4 -mb-px font-medium text-base border-b-2 transition-colors',
-            activeTab === tab.key
-              ? 'border-gray-800 text-gray-900'
-              : 'border-transparent text-gray-500 hover:text-gray-700',
-          ]"
-        >
+        <button v-for="tab in tabs" :key="tab.key" @click="activeTab = tab.key" :class="[
+          'px-8 py-4 -mb-px font-medium text-base border-b-2 transition-colors',
+          activeTab === tab.key
+            ? 'border-gray-800 text-gray-900'
+            : 'border-transparent text-gray-500 hover:text-gray-700',
+        ]">
           {{ tab.label }}
-          <span
-            v-if="tab.key === 'reviews'"
-            class="ml-1 text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full"
-          >
+          <span v-if="tab.key === 'reviews'" class="ml-1 text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">
             {{ product.reviews.length }}
           </span>
         </button>
@@ -195,11 +136,7 @@
       <div class="py-8 text-gray-700 leading-relaxed min-h-[200px]">
         <div v-show="activeTab === 'features'">
           <ul class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <li
-              v-for="(f, idx) in product.features"
-              :key="idx"
-              class="flex items-center gap-2"
-            >
+            <li v-for="(f, idx) in product.features" :key="idx" class="flex items-center gap-2">
               <span class="w-2 h-2 bg-gray-800 rounded-full"></span> {{ f }}
             </li>
           </ul>
@@ -207,14 +144,9 @@
         </div>
 
         <div v-show="activeTab === 'specs'">
-          <div
-            class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 max-w-2xl"
-          >
-            <div
-              v-for="(val, key) in product.specs"
-              :key="key"
-              class="flex justify-between border-b border-gray-100 pb-2"
-            >
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 max-w-2xl">
+            <div v-for="(val, key) in product.specs" :key="key"
+              class="flex justify-between border-b border-gray-100 pb-2">
               <span class="text-gray-500">{{ key }}</span>
               <span class="font-medium text-gray-900">{{ val }}</span>
             </div>
@@ -222,11 +154,7 @@
         </div>
 
         <div v-show="activeTab === 'reviews'" class="space-y-6 max-w-3xl">
-          <div
-            v-for="(review, idx) in product.reviews"
-            :key="idx"
-            class="bg-gray-50 p-4 rounded-lg"
-          >
+          <div v-for="(review, idx) in product.reviews" :key="idx" class="bg-gray-50 p-4 rounded-lg">
             <div class="flex items-center justify-between mb-2">
               <div class="font-bold text-gray-900">{{ review.user }}</div>
               <div class="text-yellow-500 text-sm">★ {{ review.rating }}</div>
@@ -248,16 +176,9 @@
       <div>
         <h2 class="text-xl font-bold mb-6">也許你會喜歡</h2>
         <div class="grid grid-cols-2 gap-6">
-          <div
-            v-for="item in hotProducts"
-            :key="item.id"
-            class="group cursor-pointer"
-          >
+          <div v-for="item in hotProducts" :key="item.id" class="group cursor-pointer">
             <div class="overflow-hidden rounded-lg mb-2">
-              <img
-                :src="item.image"
-                class="w-full h-40 object-cover transition duration-300 group-hover:scale-105"
-              />
+              <img :src="item.image" class="w-full h-40 object-cover transition duration-300 group-hover:scale-105" />
             </div>
             <h3 class="font-medium text-gray-900 group-hover:underline">
               {{ item.name }}
@@ -269,21 +190,12 @@
       <div>
         <h2 class="text-xl font-bold mb-6">本週熱銷排行</h2>
         <div class="space-y-4">
-          <div
-            v-for="i in 3"
-            :key="i"
-            class="flex items-center gap-4 group cursor-pointer"
-          >
-            <div
-              class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center font-bold text-gray-600"
-            >
+          <div v-for="i in 3" :key="i" class="flex items-center gap-4 group cursor-pointer">
+            <div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center font-bold text-gray-600">
               {{ i }}
             </div>
             <div class="w-16 h-16 bg-gray-100 rounded overflow-hidden">
-              <img
-                src="https://placehold.co/100x100"
-                class="w-full h-full object-cover"
-              />
+              <img src="https://placehold.co/100x100" class="w-full h-full object-cover" />
             </div>
             <div>
               <div class="font-medium text-gray-900 group-hover:text-gray-600">
@@ -456,7 +368,7 @@ const { category, productId } = route.params;
 console.log("目前類別：", category, "產品ID：", productId);
 // 實際型別是 Ref<ProductDetail | null>
 const api = useApi();
-const { data: product } = await api.get<ProductDetail>(`/Product/GetProductDetail/${productId}`);
+const { data: product } = await api.get<ProductDetail>(`/api/Product/GetProductDetail/${productId}`);
 
 // --- 3. 狀態管理 ---
 const activeImageIndex = ref(0);

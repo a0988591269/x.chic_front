@@ -10,7 +10,7 @@ export default defineNuxtConfig({
   routeRules: {
     // 當前端打 /api/xxx 時，Nuxt Server 會幫你轉發到後端
     "/api/**": {
-      proxy: `${process.env.NUXT_API_SECRET}/**`
+      proxy: `${process.env.NUXT_API_SECRET}/api/**`,
     },
   },
   // 定義環境變數(.env 的值會自動帶進來)
