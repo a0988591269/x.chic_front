@@ -1,126 +1,42 @@
 <template>
   <div class="p-6 bg-gray-50 min-h-screen font-sans">
     <div
-      class="flex flex-col md:flex-row justify-between items-center mb-6 bg-white p-4 rounded-xl shadow-sm border border-gray-100 gap-4"
-    >
+      class="flex flex-col md:flex-row justify-between items-center mb-6 bg-white p-4 rounded-xl shadow-sm border border-gray-100 gap-4">
       <div class="flex gap-3 w-full md:w-auto flex-wrap items-center">
-        <UInput
-          v-model="filter.keyword"
-          icon="i-heroicons-magnifying-glass"
-          placeholder="搜尋姓名或 Email..."
-          class="w-64"
-        />
+        <UInput v-model="searchEmail" icon="i-heroicons-magnifying-glass" placeholder="搜尋Email..." class="w-64" />
 
-        <USelect
-          v-model="filter.status"
-          :items="statusOptions"
-          class="w-40"
-          placeholder="選擇狀態"
-        />
-
-        <UButton
-          color="neutral"
-          variant="solid"
-          label="篩選"
-          @click="handleSearch"
-        />
+        <USelect v-model="searchStatus" :items="statusOptions" option-attribute="label" value-attribute="value"
+          class="w-40" placeholder="選擇狀態" />
       </div>
 
       <div>
-        <UButton
-          icon="i-heroicons-plus"
-          size="md"
-          color="primary"
-          variant="solid"
-          label="新增會員"
-          @click="openModal('create')"
-          class="font-bold cursor-pointer"
-        />
+        <UButton icon="i-heroicons-plus" size="md" color="primary" variant="solid" label="新增會員"
+          class="font-bold cursor-pointer" />
       </div>
     </div>
 
     <UCard :ui="{ body: 'p-0 sm:p-0', shadow: 'shadow-md' }">
-      <UTable :data="memberList" :columns="columns" class="w-full">
+      <UTable ref="table" :column-filters="columnFilters" :data="data" :columns="columns" class="w-full">
         <template #permissions-cell="{ row }">
           <div class="flex gap-1 flex-wrap">
-            <UBadge
-              v-for="perm in row.original.permissions"
-              :key="perm"
-              color="neutral"
-              variant="subtle"
-              size="sm"
-            >
+            <UBadge v-for="perm in row.original.permissions" :key="perm" color="neutral" variant="subtle" size="sm">
               {{ perm }}
             </UBadge>
           </div>
         </template>
-
-        <template #actions-cell="{ row }">
-          <div class="flex items-center gap-2">
-            <UButton
-              icon="i-heroicons-eye"
-              size="xs"
-              color="neutral"
-              variant="ghost"
-              @click="openModal('view', row.original)"
-            />
-            <UButton
-              icon="i-heroicons-shield-check"
-              size="xs"
-              color="warning"
-              variant="ghost"
-              @click="openModal('edit_perm', row.original)"
-            />
-            <UButton
-              icon="i-heroicons-trash"
-              size="xs"
-              color="error"
-              variant="ghost"
-              @click="confirmDelete(row.original)"
-            />
-          </div>
-        </template>
       </UTable>
 
-      <div
-        v-if="memberList.length === 0"
-        class="p-8 text-center text-gray-500 flex flex-col items-center"
-      >
+      <div v-if="data.length === 0" class="p-8 text-center text-gray-500 flex flex-col items-center">
         <UIcon name="i-heroicons-circle-stack" class="w-8 h-8 mb-2" />
         <p>查無資料</p>
       </div>
     </UCard>
-
-    <AdminUsersDialog
-      v-model:open="isModalOpen"
-      :mode="modalMode"
-      :initial-data="selectedMember"
-      @submit="handleSave"
-    />
-
-    <UModal
-      v-model:open="isDeleteModalOpen"
-      title="⚠️ 刪除警告"
-      description="確定要刪除此會員嗎？動作無法復原。"
-    >
-      <template #footer>
-        <div class="flex justify-end gap-3 w-full">
-          <UButton
-            color="neutral"
-            variant="ghost"
-            label="取消"
-            @click="isDeleteModalOpen = false"
-          />
-          <UButton color="error" label="確定刪除" @click="executeDelete" />
-        </div>
-      </template>
-    </UModal>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, h } from "vue";
-import { useToast } from "#imports";
+import { ref, computed, h } from "vue";
+import type { TableColumn } from "@nuxt/ui";
 
 definePageMeta({
   layout: "backend",
@@ -132,12 +48,18 @@ interface Member {
   id: number;
   name: string;
   email: string;
+  status: string;
   permissions: string[];
 }
 
-// --- Nuxt UI v3 / TanStack Table Column 定義 ---
-// 這裡修正了你遇到的 "Columns require an id" 錯誤
-const columns = [
+const table = useTemplateRef('table')
+const UBadge = resolveComponent('UBadge')
+
+// --- 狀態管理 (State Management) ---
+const searchEmail = ref('');
+const searchStatus = ref('');
+
+const columns: TableColumn<Member>[] = [
   {
     accessorKey: "id", // 對應資料屬性
     header: "ID",
@@ -151,98 +73,67 @@ const columns = [
     header: "Email",
   },
   {
+    accessorKey: "status",
+    header: "狀態",
+    cell: ({ row }) => {
+      const status = row.original.status;
+      const color = status === "1" ? "green" : "red";
+      const label = status === "1" ? "啟用中" : "停權";
+      return h(UBadge, { color, variant: "subtle" }, () => label);
+    }
+  },
+  {
     accessorKey: "permissions",
     header: "權限組",
   },
   {
-    id: "actions", // 🔥 關鍵：虛擬欄位必須給 id
+    id: "actions",
     header: "操作",
   },
 ];
 
-const statusOptions = ["全部狀態", "啟用中", "停權"];
-
-// --- 狀態管理 ---
-// 注意：Nuxt UI v3 的 Modal 建議使用 v-model:open
-const isModalOpen = ref(false);
-const modalMode = ref<"create" | "view" | "edit_perm">("create");
-const filter = ref({ keyword: "", status: "" });
-const selectedMember = ref<Member | undefined>(undefined);
-const toast = useToast();
-
-const isDeleteModalOpen = ref(false);
-const memberToDelete = ref<Member | null>(null);
+const statusOptions = [
+  { label: '全部狀態', value: '' },
+  { label: '啟用中', value: '1' },
+  { label: '停權', value: '0' }
+];
 
 // 模擬資料
-const memberList = ref<Member[]>([
+const data = ref<Member[]>([
   {
     id: 101,
     name: "Benson 阿龎",
     email: "benson@dev.com",
+    status: "1",
     permissions: ["admin", "editor"],
   },
   {
     id: 102,
     name: "新進員工",
     email: "newbie@dev.com",
+    status: "0",
     permissions: ["viewer"],
   },
 ]);
 
-// --- 邏輯 Actions ---
+const columnFilters = computed(() => {
+  const filters = [];
 
-const handleSearch = () => {
-  toast.add({
-    title: "搜尋中",
-    description: `關鍵字：${filter.value.keyword}`,
-    icon: "i-heroicons-magnifying-glass",
-  });
-};
-
-const openModal = (mode: "create" | "view" | "edit_perm", member?: Member) => {
-  modalMode.value = mode;
-  selectedMember.value = member;
-  isModalOpen.value = true;
-};
-
-const handleSave = (data: Member) => {
-  if (modalMode.value === "create") {
-    const newId = Math.floor(Math.random() * 1000);
-    memberList.value.push({ ...data, id: newId });
-    toast.add({
-      title: "成功",
-      description: "新增會員成功！🎉",
-      color: "success",
+  if (searchEmail.value.trim()) {
+    filters.push({
+      id: "email",
+      value: searchEmail.value,
     });
-  } else {
-    const index = memberList.value.findIndex((m) => m.id === data.id);
-    if (index !== -1) {
-      memberList.value[index] = { ...memberList.value[index], ...data };
-      toast.add({
-        title: "更新",
-        description: "權限已更新！✅",
-        color: "success",
-      });
-    }
   }
-};
 
-const confirmDelete = (member: Member) => {
-  memberToDelete.value = member;
-  isDeleteModalOpen.value = true;
-};
-
-const executeDelete = () => {
-  if (memberToDelete.value) {
-    memberList.value = memberList.value.filter(
-      (m) => m.id !== memberToDelete.value!.id
-    );
-    toast.add({
-      title: "已刪除",
-      description: `會員 ${memberToDelete.value.name} 已移除`,
-      color: "error",
+  if (searchStatus.value) {
+    filters.push({
+      id: "status",
+      value: searchStatus.value
     });
-    isDeleteModalOpen.value = false;
   }
-};
+
+  return filters;
+});
+
 </script>

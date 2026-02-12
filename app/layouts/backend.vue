@@ -2,7 +2,7 @@
   <div class="flex h-screen bg-[#fafaf9] text-gray-800 antialiased overflow-hidden font-sans">
 
     <div class="lg:hidden fixed bottom-6 right-6 z-50">
-      <UButton icon="i-lucide-layers" size="xl" color="black" class="rounded-full shadow-2xl"
+      <UButton icon="i-heroicons-square-3-stack-3d" size="xl" color="black" class="rounded-full shadow-2xl"
         @click="isSidebarOpen = !isSidebarOpen" />
     </div>
 
@@ -43,7 +43,7 @@
             <p class="text-xs font-bold text-gray-900 truncate">Admin</p>
             <p class="text-[10px] text-gray-400 truncate">Workspace Free</p>
           </div>
-          <UButton variant="ghost" color="gray" icon="i-lucide-log-out" size="xs" @click="auth.logout()" />
+          <UButton variant="ghost" color="gray" icon="i-heroicons-arrow-left-on-rectangle" size="xs" @click="auth.logout()" />
         </div>
       </div>
     </aside>
@@ -62,7 +62,7 @@
             <UKbd>K</UKbd> <span>Search...</span>
           </div>
           <UChip text="3" size="2xl">
-            <UButton icon="i-lucide-bell" variant="ghost" color="gray" />
+            <UButton icon="i-heroicons-bell" variant="ghost" color="gray" />
           </UChip>
         </div>
       </header>

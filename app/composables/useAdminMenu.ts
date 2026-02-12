@@ -17,29 +17,33 @@ export const useAdminMenu = () => {
         },
         {
           label: "工作台",
-          icon: "i-lucide-layout-dashboard",
+          icon: "i-heroicons-squares-2x2",
           to: "/admin",
         },
         {
           label: "會員管理",
-          icon: "i-lucide-users",
+          icon: "i-heroicons-users",
           children: [
             {
               label: "會員列表",
-              icon: "i-lucide-user",
+              icon: "i-heroicons-user",
               to: "/admin/users",
             },
-            { label: "角色管理", icon: "i-lucide-key", to: "/admin/roles" },
+            {
+              label: "角色管理",
+              icon: "i-heroicons-key",
+              to: "/admin/roles",
+            },
             {
               label: "權限設定",
-              icon: "i-lucide-shield",
+              icon: "i-heroicons-shield-check",
               to: "/admin/permissions",
             },
           ],
         },
         {
           label: "訂單管理",
-          icon: "i-lucide-shopping-cart",
+          icon: "i-heroicons-shopping-cart",
           children: [
             { label: "所有訂單", to: "/admin/orders" },
             { label: "退款 / 爭議", to: "/admin/orders/refunds" },
@@ -47,21 +51,23 @@ export const useAdminMenu = () => {
         },
         {
           label: "專案管理",
-          icon: "i-lucide-briefcase",
-          // 範例：只有特定權限才顯示子選單
-          // disabled: !auth.hasPermission('project_view'),
+          icon: "i-heroicons-briefcase",
           children: [
-            { label: "進行中", icon: "i-lucide-clock", to: "/projects/active" },
+            {
+              label: "進行中",
+              icon: "i-heroicons-clock",
+              to: "/projects/active",
+            },
             {
               label: "已完成",
-              icon: "i-lucide-check-circle",
+              icon: "i-heroicons-check-circle",
               to: "/projects/done",
             },
           ],
         },
         {
           label: "數據分析",
-          icon: "i-lucide-bar-chart-3",
+          icon: "i-heroicons-chart-bar",
           children: [
             { label: "營運總覽", to: "/admin/analytics/overview" },
             { label: "使用者行為", to: "/admin/analytics/users" },
@@ -72,7 +78,7 @@ export const useAdminMenu = () => {
       [
         {
           label: "系統設定",
-          icon: "i-lucide-settings",
+          icon: "i-heroicons-cog-6-tooth",
           children: [
             { label: "基本設定", to: "/admin/settings/general" },
             { label: "安全性", to: "/admin/settings/security" },
@@ -82,7 +88,7 @@ export const useAdminMenu = () => {
         },
         {
           label: "系統監控",
-          icon: "i-lucide-activity",
+          icon: "i-heroicons-cpu-chip",
           children: [
             { label: "操作紀錄", to: "/admin/audit-logs" },
             { label: "錯誤日誌", to: "/admin/error-logs" },

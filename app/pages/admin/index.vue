@@ -17,7 +17,7 @@ definePageMeta({
         <div class="flex items-center gap-4">
           <div class="p-3 bg-indigo-50 rounded-full">
             <UIcon
-              name="i-lucide-trending-up"
+              name="i-heroicons-arrow-trending-up"
               class="w-6 h-6 text-indigo-600"
             />
           </div>
@@ -34,7 +34,7 @@ definePageMeta({
     >
       <div class="text-center">
         <UIcon
-          name="i-lucide-layout-dashboard"
+          name="i-heroicons-squares-2x2"
           class="w-12 h-12 mx-auto mb-2 opacity-20"
         />
         <p>在這裡開始建立您的後台功能組件 ✨</p>
