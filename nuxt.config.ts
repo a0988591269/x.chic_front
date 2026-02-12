@@ -44,6 +44,19 @@ export default defineNuxtConfig({
     "@pinia/nuxt",
   ],
   icon: {
-    localApiEndpoint: '/',
+    // 定義伺服器端圖示庫，確保在 SSR 階段也能正常使用
+    serverBundle: {
+      collections: ["heroicons", "lucide"],
+    },
+
+    // 定義客戶端圖示庫，確保在客戶端渲染階段也能正常使用
+    // 注意：如果你有使用自定義圖示庫，請確保 `includeCustomCollections` 設為 `true`
+    clientBundle: {
+      scan: true,
+      includeCustomCollections: true,
+    },
+
+    // 定義本地圖示庫，確保在開發階段也能正常使用
+    localApiEndpoint: "/",
   },
 });
