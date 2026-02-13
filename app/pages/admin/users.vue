@@ -5,17 +5,16 @@
       <div class="flex gap-3 w-full md:w-auto flex-wrap items-center">
         <UInput v-model="searchEmail" icon="i-heroicons-magnifying-glass" placeholder="搜尋Email..." class="w-64" />
 
-        <USelect v-model="searchStatus" :items="statusOptions" option-attribute="label" value-attribute="value"
-          class="w-40" placeholder="選擇狀態" />
+        <USelect v-model="searchStatus" :items="statusOptions" class="w-40" placeholder="選擇狀態" />
       </div>
 
       <div>
         <UButton icon="i-heroicons-plus" size="md" color="primary" variant="solid" label="新增會員"
-          class="font-bold cursor-pointer" />
+          class="font-bold cursor-pointer" @click="isCreateModalOpen = true" />
       </div>
     </div>
 
-    <UCard :ui="{ body: 'p-0 sm:p-0', shadow: 'shadow-md' }">
+    <UCard :ui="{ body: 'p-0 sm:p-0' }">
       <UTable ref="table" :column-filters="columnFilters" :data="data" :columns="columns" class="w-full">
         <template #permissions-cell="{ row }">
           <div class="flex gap-1 flex-wrap">
@@ -31,6 +30,8 @@
         <p>查無資料</p>
       </div>
     </UCard>
+
+    <AdminUsersCreateModal v-model:is-open="isCreateModalOpen" @success="handleCreateSuccess" />
   </div>
 </template>
 
@@ -43,6 +44,15 @@ definePageMeta({
   middleware: "admin",
 });
 
+const api = useApi()
+
+const table = useTemplateRef('table')
+const UBadge = resolveComponent('UBadge')
+
+// --- 狀態管理 (State Management) ---
+const searchEmail = ref('');
+const searchStatus = ref(null);
+
 // --- Type 定義 ---
 interface Member {
   id: number;
@@ -51,13 +61,6 @@ interface Member {
   status: string;
   permissions: string[];
 }
-
-const table = useTemplateRef('table')
-const UBadge = resolveComponent('UBadge')
-
-// --- 狀態管理 (State Management) ---
-const searchEmail = ref('');
-const searchStatus = ref('');
 
 const columns: TableColumn<Member>[] = [
   {
@@ -77,7 +80,7 @@ const columns: TableColumn<Member>[] = [
     header: "狀態",
     cell: ({ row }) => {
       const status = row.original.status;
-      const color = status === "1" ? "green" : "red";
+      const color = status === "1" ? "success" : "error";
       const label = status === "1" ? "啟用中" : "停權";
       return h(UBadge, { color, variant: "subtle" }, () => label);
     }
@@ -92,11 +95,11 @@ const columns: TableColumn<Member>[] = [
   },
 ];
 
-const statusOptions = [
-  { label: '全部狀態', value: '' },
+const statusOptions = ref([
+  { label: '全部狀態', value: null },
   { label: '啟用中', value: '1' },
   { label: '停權', value: '0' }
-];
+]);
 
 // 模擬資料
 const data = ref<Member[]>([
@@ -115,6 +118,9 @@ const data = ref<Member[]>([
     permissions: ["viewer"],
   },
 ]);
+
+// TODO： 從 API 獲取資料
+const { data: resp } = await api.get('/admin/getAllUsers')
 
 const columnFilters = computed(() => {
   const filters = [];
@@ -135,5 +141,24 @@ const columnFilters = computed(() => {
 
   return filters;
 });
+
+// --- 狀態管理 (State Management) ---
+const isCreateModalOpen = ref(false) // 控制 Modal 開關
+
+const handleCreateSuccess = (payload: { email: string }) => {
+  // 這裡之後可以改成重新 fetch API
+  // 目前先模擬新增資料到前端陣列
+  data.value.push({
+    id: data.value.length + 101, // 假 ID
+    name: "新會員", // 暫時寫死
+    email: payload.email,
+    status: "1",
+    permissions: ["viewer"]
+  })
+
+  // 可以加個 Toast 通知
+  const toast = useToast()
+  toast.add({ title: '新增成功', description: `會員 ${payload.email} 已建立`, color: 'success' })
+}
 
 </script>
